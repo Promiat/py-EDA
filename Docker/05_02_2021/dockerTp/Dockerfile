@@ -1,6 +1,5 @@
-FROM alpine:3.13
+FROM alpine
 
-ENV PYTHONUNBUFFERED=1
 
 RUN echo "**** install Python ****" && \
     apk add --no-cache python3 && \
@@ -13,8 +12,11 @@ RUN echo "**** install Python ****" && \
     if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
     echo "**** install vim ****" && \ 
     apk add vim  
-RUN touche ./requirements.txt
 
-COPY ./app /app
-CMD python /app/app_test.py
+WORKDIR /app
+COPY . /app 
+
+RUN pip install --requirement ./requirements.txt
+EXPOSE 5000
+CMD [ "python3", "./app.py" ]
 
